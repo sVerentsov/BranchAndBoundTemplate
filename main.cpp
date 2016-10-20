@@ -8,6 +8,7 @@ using namespace std;
 
 int main()
 {
+	//test commit
 	ifstream in("input.txt");
 	int m, n;
 	in >> m >> n;
