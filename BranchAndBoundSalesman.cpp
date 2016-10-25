@@ -17,25 +17,31 @@ BranchAndBoundSalesman::BranchAndBoundSalesman(int _n, int _m, int** _c)
 }
 bool BranchAndBoundSalesman::ifCycles()
 {
-	set<int> visitedVertices;
-	if (curAnswer.empty())
-		return false;
-	int curVertex = 0;
-	int length = 0;
-	visitedVertices.insert(curVertex);
-	while (true)
+	vector<bool> checkedVertices(assignedJobs.size(),false);
+	for (int i = 0; i < assignedJobs.size(); i++)
 	{
-		length++;
-		curVertex = curAnswer[curVertex];
-		if (visitedVertices.count(curVertex))
-			break;
-		else
-			visitedVertices.insert(curVertex);
+		if (!checkedVertices[i])
+		{
+			int curVertex = i;
+			checkedVertices[i] = true;
+			vector<int> visitedVertices;
+			visitedVertices.push_back(i);
+			while (assignedJobs[curVertex] < assignedJobs.size())
+			{
+				curVertex = assignedJobs[curVertex];
+				if (count(visitedVertices.begin(), visitedVertices.end(), curVertex))
+				{
+					if (visitedVertices.size() == n)
+						return false;
+					else
+						return true;
+				}
+				visitedVertices.push_back(curVertex);
+				checkedVertices[curVertex] = true;
+			}
+		}
 	}
-	if (length == n)
-		return false;
-	else
-		return true;
+	return false;
 }
 bool BranchAndBoundSalesman::nextBranch(vector<int>* watchedJobs)
 {
